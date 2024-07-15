@@ -5,21 +5,16 @@ RUN apk add --no-cache dcron
 
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 
-RUN sed -i "s/myMailhub/$SMTPSERVER/g" /etc/ssmtp/ssmtp.conf
-RUN sed -i "s/UseSTARTTLS=YES/UseSTARTTLS=$UseSTARTTLS/g" /etc/ssmtp/ssmtp.conf
+# create dir for logging
+RUN mkdir /var/log/monitoring
+RUN mkdir -p /monitoring/tmp
 
-RUN echo root:$FROM:$SMTPSERVER >> /etc/ssmtp/revaliases
+WORKDIR /monitoring
 
+COPY monitoring.sh .
+RUN chmod +x monitoring.sh
 
-#COPY monitoring.sh .
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
 
-#RUN chmod +x monitoring.sh
-
-#RUN echo "*/10 * * * * monitoring monitoring.sh 192.168.20.10 > monitoring.log" > /etc/crontabs/monitoring
-
-COPY message.txt .
-
-COPY testing.sh .
-RUN chmod +x testing.sh
-
-CMD ["./testing.sh", ""]
+CMD ["/monitoring/entrypoint.sh", ""]
