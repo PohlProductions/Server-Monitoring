@@ -1,0 +1,9 @@
+services:
+  monitoring:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - env.list
+    volumes:
+      - ./logs:/var/log/monitoring
