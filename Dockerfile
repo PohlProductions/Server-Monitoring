@@ -1,7 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --no-cache ssmtp
-RUN apk add --no-cache dcron
+RUN apk add --no-cache tzdata ssmtp dcron
 
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 
