@@ -1,12 +1,9 @@
 FROM alpine:latest
 
-RUN apk add --no-cache tzdata ssmtp dcron
-
-COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
+RUN apk add --no-cache tzdata curl dcron
 
 # create dir for logging
 RUN mkdir /var/log/monitoring
-RUN mkdir -p /monitoring/tmp
 
 WORKDIR /monitoring
 

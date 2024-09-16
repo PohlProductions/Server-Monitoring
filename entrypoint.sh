@@ -1,11 +1,5 @@
 #!/bin/sh
 
-sed -i "s/myMailhub/$SMTPSERVER/g" /etc/ssmtp/ssmtp.conf
-sed -i "s/myHostname/$(hostname)/g" /etc/ssmtp/ssmtp.conf
-sed -i "s/UseSTARTTLS=YES/UseSTARTTLS=$UseSTARTTLS/g" /etc/ssmtp/ssmtp.conf
-echo "root:$FROM:$SMTPSERVER" >> /etc/ssmtp/revaliases
-echo "monitoring:$FROM:$SMTPSERVER" >> /etc/ssmtp/revaliases
-
-crontab -l | { cat; echo "*/15 * * * * /monitoring/monitoring.sh $REMOTE_HOST $SMTPSERVER $FROM $TO $USER $PASSWORD >> /var/log/monitoring/monitoring.log"; } | crontab -
+crontab -l | { cat; echo "*/15 * * * * /monitoring/monitoring.sh $REMOTE_HOST $ACCESS_TOKEN $HOSTNAME $MASTODON_HANDLE>> /var/log/monitoring/monitoring.log"; } | crontab -
 
 crond -f
