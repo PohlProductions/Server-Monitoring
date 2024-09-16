@@ -1,20 +1,30 @@
 #!/bin/sh
 
-remotehost=$1
-SMTPSERVER=$2
-FROM=$3
-TO=$4
-USER=$5
-PASSWORD=$6
+target=$1
 
-touch /monitoring/tmp/msg.txt
-echo -e "Subject: Server not reachable\n\nServer: $remotehost\nTime: $(date)" > /monitoring/tmp/msg.txt
+success_count=0
 
+# Ping the remote host 5 times
+for i in $(seq 1 5)
+do
+  if ping -c 1 -w 1 $target > /dev/null
+  then
+    success_count=$((success_count + 1))
+  fi
+done
 
-if ping -c 1 -w 1 $remotehost > /dev/null
+# Perform actions based on the number of successful pings
+if [ $success_count -gt 3 ]
 then
   echo "$(date) success"
 else
-  sendmail -v -S$SMTPSERVER -f$FROM -au$USER -ap$PASSWORD $TO < /monitoring/tmp/msg.txt 2>&1
+
+  access_token=$2
+  hostname=$3
+  mastodonhandle=$4
+
+  msg="Server not reachable Server: $hostname cannot reach $target Time: $(date)"
+
+  curl -X POST -H "Authorization: Bearer $access_token" -F "status=$msg $mastodonhandle" -F "visibility=direct" https://mastodon.social/api/v1/statuses
   echo "$(date) failed"
 fi
