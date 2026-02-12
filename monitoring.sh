@@ -28,3 +28,4 @@ else
   curl -X POST -H "Authorization: Bearer $access_token" -F "status=$msg $mastodonhandle" -F "visibility=direct" https://mastodon.social/api/v1/statuses
   echo "$(date) failed"
 fi
+

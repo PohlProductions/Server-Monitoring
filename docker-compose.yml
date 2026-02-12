@@ -6,4 +6,7 @@ services:
     env_file:
       - env.list
     volumes:
-      - ./logs:/var/log/monitoring
+      - monitoring-logs:/var/log/monitoring
+volumes: 
+  monitoring-logs:
+
